@@ -7,12 +7,14 @@ class Game:
         self.player: str = random.choice(['X', 'O'])
         self.board: List[List[str]] = [['-' for _ in range(3)] for _ in range(3)]
 
-    def enter_loc(self, row: int, col: int, mark: str) -> None:
+    def marking_insert(self, row: int, col: int, mark: str) -> None:
         self.board[row][col] = mark
 
-    def print_board(self) -> None:
+    def __str__(self) -> str:
+        display = '\n'
         for line in self.board:
-            print(line)
+            display += f'{line}\n'
+        return display
 
     def check_for_win(self) -> Union[bool, str]:
         for line in self.board:
@@ -43,16 +45,16 @@ class Game:
 
 
 game = Game()
-game.print_board()
+print(game)
 while not game.check_for_win() and game.empty_spaces():
     try:
-        yx = input(f"{game.player}'s turn! choose a line and a column (y,x): ").split(',')
-        if not yx[0].isdigit() or not yx[1].isdigit():
+        player_locations = input(f"{game.player}'s turn! choose a line and a column (y,x): ").split(',')
+        if not player_locations[0].isdigit() or not player_locations[1].isdigit():
             raise ValueError
-        y, x = int(yx[0]) - 1, int(yx[1]) - 1
+        y, x = int(player_locations[0]) - 1, int(player_locations[1]) - 1
         if game.board[y][x] == '-':
-            game.enter_loc(y, x, game.player)
-            game.print_board()
+            game.marking_insert(y, x, game.player)
+            print(game)
             game.switch_player()
     except ValueError:
         print("Enter a line number and column number separated by comma (1,2 for example). Please Try again...")
